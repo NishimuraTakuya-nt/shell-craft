@@ -1,0 +1,32 @@
+#!/bin/bash
+
+set -e
+
+# zoxideの初期化
+eval "$(zoxide init bash)"
+
+# AWS CLIのプロファイルオプションを設定
+aws_profile_option=""
+if [[ -n "${AWS_PROFILE}" ]]; then
+    aws_profile_option="--profile ${AWS_PROFILE}"
+fi
+
+# EC2インスタンス情報の取得
+get_ec2_instances() {
+  aws ec2 describe-instances ${aws_profile_option} \
+    --query 'Reservations[].Instances[].[Tags[?Key==`Name`].Value | [0], InstanceId, State.Name]' \
+    --output json | jq -r '.[] | select(.[2]=="running") | "\(.[0])\t\(.[1])"'
+}
+
+# fzfを使用してインスタンスを選択
+selected=$(get_ec2_instances | fzf --prompt="Select EC2 instance: " --delimiter '\t' --with-nth=1)
+
+if [[ -n "$selected" ]]; then
+  instance_id=$(echo "$selected" | cut -f2)
+  echo "$instance_id"
+
+#  # zoxideにインスタンス名を追加（頻繁に使用するインスタンスへの素早いアクセスのため）
+#  zoxide add "$instance_name" todo 今度検討する
+else
+  echo "No instance selected."
+fi
