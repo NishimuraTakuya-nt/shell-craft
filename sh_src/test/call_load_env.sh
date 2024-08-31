@@ -1,12 +1,13 @@
 #!/bin/bash
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+echo "Script directory: $SCRIPT_DIR"
 
 # 環境変数読み込み
-LOAD_ENV_SCRIPT="${SCRIPT_DIR}/load_env.sh"
+LOAD_ENV_SCRIPT="${SCRIPT_DIR}/../load_env.sh"
 if [ -f "$LOAD_ENV_SCRIPT" ]; then
     source "$LOAD_ENV_SCRIPT"
-    load_env_vars
+    load_env_vars "${SCRIPT_DIR}/../.env"
 else
     echo "Error: Cannot find load_env.sh script" >&2
     exit 1

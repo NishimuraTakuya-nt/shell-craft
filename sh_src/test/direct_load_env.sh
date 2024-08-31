@@ -2,7 +2,7 @@
 set -e
 
 # 設定ファイルのパス
-CONFIG_FILE=".env"
+CONFIG_FILE="./../../.env"
 
 # 設定ファイルが存在する場合、読み込む
 if [ -f "$CONFIG_FILE" ]; then

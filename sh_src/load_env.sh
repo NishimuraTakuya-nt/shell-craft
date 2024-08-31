@@ -1,7 +1,9 @@
 #!/bin/bash
 
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 load_env_vars() {
-    local config_file="${1:-.env}"
+    local config_file="${1:-${SCRIPT_DIR}/../.env}"
 
     if [ -f "$config_file" ]; then
         while IFS='=' read -r key value
